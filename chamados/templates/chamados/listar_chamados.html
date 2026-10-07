@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chamados | ResolveDesk</title>
+</head>
+<body>
+    <h1>ResolveDesk</h1>
+    <h2>Lista de Chamados</h2>
+
+    <a href="{% url 'novo_chamado' %}">Abrir Novo Chamado</a>
+
+    {% for chamado in chamados %}
+        <article>
+            <h3>{{ chamado.titulo }}</h3>
+            <p>{{ chamado.descricao }}</p>
+            <p>Status: {{ chamado.get_status_display }}</p>
+            <a href="{% url 'atualizar_status' chamado.id %}">Alterar Status</a>
+            <p>Criado em: {{ chamado.criado_em|date:"d/m/Y H:i" }}</p>
+        </article>
+    {% empty %}
+
+        <p>Nenhum chamado encontrado.</p>
+    {% endfor %}
+</body>
+</html>

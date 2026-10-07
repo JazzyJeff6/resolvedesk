@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar status | ResolveDesk</title>
+</head>
+<body>
+    <h1>Alterar Status</h1>
+    <h2>{{ chamado.titulo }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Salvar Status</button>
+    </form>
+    
+    <a href="{% url 'listar_chamados' %}"> Voltar para a lista</a>
+</body>
+</html>

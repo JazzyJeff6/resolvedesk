@@ -8,6 +8,20 @@
 <body>
     <h1>ResolveDesk</h1>
     <h2>Lista de Chamados</h2>
+    <form method="get" action="{% url 'listar_chamados' %}">
+        <label for="busca">Pesquisar chamados e soluções:</label>
+
+        <input
+            type="search"
+            id="busca"
+            name="busca"
+            value=" {{ busca }}"
+            placeholder="Ex: impressora ou driver"
+        >
+
+        <button type="submit">Pesquisar</button>
+        <a href="{% url 'listar_chamados' %}">Limpar busca</a>
+    </form>
 
     <a href="{% url 'novo_chamado' %}">Abrir Novo Chamado</a>
 
@@ -24,8 +38,11 @@
             <p>Criado em: {{ chamado.criado_em|date:"d/m/Y H:i" }}</p>
         </article>
     {% empty %}
-
-        <p>Nenhum chamado encontrado.</p>
+        {% if busca %}
+            <p>Nenhum chamado encontrado para "{{ busca }}".</p>
+        {% else %}
+            <p>Nenhum chamado cadastrado ainda.</p>
+        {% endif %}
     {% endfor %}
 </body>
 </html>

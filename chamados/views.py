@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ChamadoForm, ChamadoStatusForm, ChamadoSolucaoForm
 from .models import Chamado
+from django.db.models import Q
 # Create your views here.
 
 from django.shortcuts import render, redirect
@@ -19,12 +20,21 @@ def novo_chamado(request):
     return render(request, 'chamados/novo_chamado.html', {'form':form})
 
 def listar_chamados(request):
+    busca = request.GET.get('busca', '').strip()
+
     chamados = Chamado.objects.order_by('-criado_em')
+
+    if busca:
+        chamados = chamados.filter(
+            Q(titulo__icontains=busca) 
+            | Q(descricao__icontains=busca)
+            | Q(solucao__icontains=busca)
+        )
 
     return render(
         request,
         'chamados/listar_chamados.html',
-        {'chamados': chamados}
+        {'chamados': chamados, 'busca': busca}
     )
 
 def atualizar_status(request, chamado_id):

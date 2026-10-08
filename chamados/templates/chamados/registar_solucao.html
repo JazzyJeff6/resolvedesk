@@ -6,18 +6,28 @@
     <title>Registrar solução | ResolveDesk</title>
 </head>
 <body>
+{% extends 'chamados/base.html' %}
+
+{% block title %}Registrar solução | ResolveDesk{% endblock %}
+
+{% block content %}
     <h1>Registrar solução</h1>
-    <h2>{{ chamado.titulo }}</h2>
+    <p>Chamado #{{ chamado.id }} — {{ chamado.titulo }}</p>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p}}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-        <button type="submit">Salvar solução</button>
-    </form>
+            <div class="acoes">
+                <button type="submit">Salvar solução</button>
 
-    <a href="{% url 'detalhe_chamado' chamado.id %}">
-        Voltar para o chamado
-    </a>
+                <a href="{% url 'detalhe_chamado' chamado.id %}">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
 </body>
 </html>

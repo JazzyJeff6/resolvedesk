@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ResolveDesk{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'chamados/css/style.css' %}">
+</head>
+<body>
+    <header class="cabecalho">
+        <a class="marca" href="{% url 'listar_chamados' %}">
+            ResolveDesk
+        </a>
+        
+        <nav aria-label="Navegação principal">
+            <a href="{% url 'listar_chamados' %}">Chamados</a>
+            <a href="{% url 'novo_chamado' %}">Novo Chamado</a>
+        </nav>
+    </header>
+
+    <main class="conteudo">
+        {% block content %}
+        {% endblock %}
+    </main> 
+</body>
+</html>

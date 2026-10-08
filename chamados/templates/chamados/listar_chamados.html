@@ -6,8 +6,15 @@
     <title>Chamados | ResolveDesk</title>
 </head>
 <body>
-    <h1>ResolveDesk</h1>
-    <h2>Lista de Chamados</h2>
+    {% extends 'chamados/base.html' %}
+
+    {% block title %}Chamados | ResolveDesk{% endblock %}
+
+    {% block content %}
+    <h1>Chamados</h1>
+    <p>Consulte os problemas registrados e as soluções aplicadas.</p>
+
+    <div class="card">
     <form method="get" action="{% url 'listar_chamados' %}">
         <label for="busca">Pesquisar chamados e soluções:</label>
 
@@ -18,31 +25,48 @@
             value=" {{ busca }}"
             placeholder="Ex: impressora ou driver"
         >
-
+        
+        <div class="acoes">
         <button type="submit">Pesquisar</button>
         <a href="{% url 'listar_chamados' %}">Limpar busca</a>
+        </div>
     </form>
-
-    <a href="{% url 'novo_chamado' %}">Abrir Novo Chamado</a>
+    </div>
 
     {% for chamado in chamados %}
-        <article>
-            <h3>
+        <article class="card">
+            <h2>
                 <a href="{% url 'detalhe_chamado' chamado.id %}">
                     {{ chamado.titulo }}
                 </a>
-            </h3>
+            </h2>
+
             <p>{{ chamado.descricao }}</p>
-            <p>Status: {{ chamado.get_status_display }}</p>
-            <a href="{% url 'atualizar_status' chamado.id %}">Alterar Status</a>
+            <p><strong>Status:</strong> {{ chamado.get_status_display }}</p>     
             <p>Criado em: {{ chamado.criado_em|date:"d/m/Y H:i" }}</p>
+
+            <div class="acoes">
+                <a class="botao" href="{% url 'detalhe_chamado' chamado.id %}">
+                    Ver detalhes
+                </a>
+
+                <a href="{% url 'atualizar_status' chamado.id %}">
+                    Alterar status
+                </a>
+            </div>
         </article>
     {% empty %}
+        <div class="card">
         {% if busca %}
             <p>Nenhum chamado encontrado para "{{ busca }}".</p>
         {% else %}
             <p>Nenhum chamado cadastrado ainda.</p>
+            <a class="botao" href="{% url 'novo_chamado' %}">
+                Abrir primeiro chamado
+            </a>
         {% endif %}
+        </div>
     {% endfor %}
+    {% endblock %}
 </body>
 </html>

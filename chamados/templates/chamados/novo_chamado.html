@@ -3,17 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title></title>
 </head>
 <body>
-    <h1>ResolveDesk</h1>
-    <h2>Abrir novo chamado</h2>
+{% extends 'chamados/base.html' %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p}}
+{% block title %} Novo chamado | ResolveDesk {% endblock %}
 
-        <button type="submit">Salvar Chamado</button>
-    </form>
+{% block content %}
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p}}
+
+            <div class="acoes">
+                <button type="submit">Salvar chamado</button>
+
+                <a href="{% url 'listar_chamados' %}">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+
+    </div>
+{% endblock %}
 </body>
 </html>

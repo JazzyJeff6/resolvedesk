@@ -6,36 +6,53 @@
     <title>Detalhes do chamado | ResolveDesk</title>
 </head>
 <body>
+{% extends 'chamados/base.html' %}
+
+{% block title %}Chamado #{{ chamado.id }} | ResolveDesk{% endblock %}
+
+{% block content %}
     <h1>Chamado #{{ chamado.id }}</h1>
-    <h2>{{ chamado.titulo }}</h2>
 
-    <h3>Descrição</h3>
-    {{ chamado.descricao|linebreaks }}
-
-    <p>Status: {{ chamado.get_status_display }}</p>
-    <p>Criado em: {{ chamado.criado_em|date:"d/m/Y H:i" }}</p>
-
-    <h3>Solução aplicada</h3>
-
-    {% if chamado.solucao %}
-        {{ chamado.solucao|linebreaks }}
-        {% else %}
-            <p>Nenhuma solução registrada ainda.</p>
-        {% endif %} 
+    <article class="card">
+        <h2>{{ chamado.titulo }}</h2>
 
         <p>
-            <a href="{% url 'registrar_solucao' chamado.id %}">
-                Registrar ou editar solução
-            </a>
+            <strong>Status:</strong>
+            {{ chamado.get_status_display }}
         </p>
 
-    <a href="{% url 'atualizar_status' chamado.id %}">
-        Alterar status
-    </a>
-    
-    <a href="{% url 'listar_chamados' %}">
-        Voltar para a lista
-    </a>
+        <p>
+            <strong>Criado em:</strong>
+            {{ chamado.criado_em|date:"d/m/Y H:i" }}
+        </p>
 
+        <h3>Descrição</h3>
+        {{ chamado.descricao|linebreaks }}
+
+        <div class="acoes">
+            <a class="botao" href="{% url 'atualizar_status' chamado.id %}">
+                Alterar status
+            </a>
+        </div>
+    </article>
+
+    <section class="card">
+        <h2>Solução aplicada</h2>
+
+        {% if chamado.solucao %}
+            {{ chamado.solucao|linebreaks }}
+        {% else %}
+            <p>Nenhuma solução registrada ainda.</p>
+        {% endif %}
+
+        <div class="acoes">
+            <a class="botao" href="{% url 'registrar_solucao' chamado.id %}">
+                Registrar ou editar solução
+            </a>
+        </div>
+    </section>
+
+    <a href="{% url 'listar_chamados' %}">Voltar para a lista</a>
+{% endblock %}
 </body>
 </html>

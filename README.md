@@ -8,8 +8,11 @@ O projeto permite registrar problemas, consultar chamados e acompanhar o andamen
 
 - Abertura de chamados com título e descrição.
 - Listagem dos chamados, do mais recente para o mais antigo.
+- Página de detalhes de cada chamado.
 - Registro automático da data de criação.
 - Atualização do status: Aberto, Em andamento e Resolvido.
+- Registro e edição da solução aplicada.
+- Pesquisa por texto no título, na descrição e na solução.
 
 ## Tecnologias
 
@@ -65,11 +68,10 @@ O servidor utilizado nesta etapa é destinado ao desenvolvimento local.
 
 ## Próximas etapas
 
-- Página de detalhes do chamado.
-- Registro da solução aplicada.
+- Melhorias na interface com CSS.
 - Autenticação e permissões de acesso.
-- Pesquisa de soluções anteriores.
-- Melhorias na interface.
+- Biblioteca dedicada de soluções.
+- Sugestões de soluções por semelhança entre chamados.
 - Testes automatizados das regras principais.
 
 ## Autor

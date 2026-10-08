@@ -13,7 +13,11 @@
 
     {% for chamado in chamados %}
         <article>
-            <h3>{{ chamado.titulo }}</h3>
+            <h3>
+                <a href="{% url 'detalhe_chamado' chamado.id %}">
+                    {{ chamado.titulo }}
+                </a>
+            </h3>
             <p>{{ chamado.descricao }}</p>
             <p>Status: {{ chamado.get_status_display }}</p>
             <a href="{% url 'atualizar_status' chamado.id %}">Alterar Status</a>

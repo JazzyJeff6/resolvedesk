@@ -11,6 +11,9 @@ class Chamado(models.Model):
         ('em_andamento', 'Em andamento'),
         ('resolvido', 'Resolvido'),
     ]
+
+    solucao = models.TextField(blank=True, default='')
+    
     
     titulo = models.CharField(max_length=150)
     descricao = models.TextField()

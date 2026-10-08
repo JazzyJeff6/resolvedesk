@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do chamado | ResolveDesk</title>
+</head>
+<body>
+    <h1>Chamado #{{ chamado.id }}</h1>
+    <h2>{{ chamado.titulo }}</h2>
+
+    <h3>Descrição</h3>
+    {{ chamado.descricao|linebreaks }}
+
+    <p>Status: {{ chamado.get_status_display }}</p>
+    <p>Criado em: {{ chamado.criado_em|date:"d/m/Y H:i" }}</p>
+
+    <h3>Solução aplicada</h3>
+
+    {% if chamado.solucao %}
+        {{ chamado.solucao|linebreaks }}
+        {% else %}
+            <p>Nenhuma solução registrada ainda.</p>
+        {% endif %} 
+
+        <p>
+            <a href="{% url 'registrar_solucao' chamado.id %}">
+                Registrar ou editar solução
+            </a>
+        </p>
+
+    <a href="{% url 'atualizar_status' chamado.id %}">
+        Alterar status
+    </a>
+    
+    <a href="{% url 'listar_chamados' %}">
+        Voltar para a lista
+    </a>
+
+</body>
+</html>

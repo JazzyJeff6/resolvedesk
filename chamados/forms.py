@@ -10,3 +10,8 @@ class ChamadoStatusForm(forms.ModelForm):
     class Meta:
         model = Chamado
         fields = ['status']
+
+class ChamadoSolucaoForm(forms.ModelForm):
+    class Meta:
+        model = Chamado
+        fields = ['solucao']

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ChamadoForm, ChamadoStatusForm
+from .forms import ChamadoForm, ChamadoStatusForm, ChamadoSolucaoForm
 from .models import Chamado
-
 # Create your views here.
 
 from django.shortcuts import render, redirect
@@ -45,4 +44,30 @@ def atualizar_status(request, chamado_id):
         'chamados/atualizar_status.html',
         {'form': form, 'chamado': chamado}
     )
-            
+
+def detalhe_chamado(request, chamado_id):
+    chamado = get_object_or_404(Chamado, pk=chamado_id)
+
+    return render(
+        request,
+        'chamados/detalhe_chamado.html',
+        {'chamado': chamado},
+    )
+
+def registrar_solucao(request, chamado_id):
+    chamado = get_object_or_404(Chamado, pk=chamado_id)
+
+    if request.method == 'POST':
+        form = ChamadoSolucaoForm(request.POST, instance=chamado)
+                                  
+        if form.is_valid():
+            form.save()
+            return redirect('detalhe_chamado', chamado_id=chamado.id)
+    else:
+        form = ChamadoSolucaoForm(instance=chamado)
+
+    return render(
+        request,
+        'chamados/registar_solucao.html',
+        {'form': form, 'chamado': chamado}
+    )

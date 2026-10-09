@@ -49,10 +49,11 @@
                 <a class="botao" href="{% url 'detalhe_chamado' chamado.id %}">
                     Ver detalhes
                 </a>
-
+            {% if e_tecnicos %}    
                 <a href="{% url 'atualizar_status' chamado.id %}">
                     Alterar status
                 </a>
+            {% endif %}
             </div>
         </article>
     {% empty %}

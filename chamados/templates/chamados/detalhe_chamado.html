@@ -38,12 +38,13 @@
 
         <h3>Descrição</h3>
         {{ chamado.descricao|linebreaks }}
-
+    {% if e_tecnico %}
         <div class="acoes">
             <a class="botao" href="{% url 'atualizar_status' chamado.id %}">
                 Alterar status
             </a>
         </div>
+    {% endif %}
     </article>
 
     <section class="card">

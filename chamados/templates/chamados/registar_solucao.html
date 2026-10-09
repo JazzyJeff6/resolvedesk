@@ -18,7 +18,7 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-
+        {% if e_tecnico %}
             <div class="acoes">
                 <button type="submit">Salvar solução</button>
 
@@ -26,6 +26,7 @@
                     Cancelar
                 </a>
             </div>
+        {% endif %}
         </form>
     </div>
 {% endblock %}

@@ -3,10 +3,18 @@ from .forms import ChamadoForm, ChamadoStatusForm, ChamadoSolucaoForm
 from .models import Chamado
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 # Create your views here.
 
 from django.shortcuts import render, redirect
 from .forms import ChamadoForm
+
+def usuario_e_tecnico(user):
+    return(
+        user.is_superuser
+        or
+        user.groups.filter(name='Tecnicos').exists()
+    )
 
 
 @login_required
@@ -31,6 +39,9 @@ def listar_chamados(request):
 
     chamados = Chamado.objects.order_by('-criado_em')
 
+    if not usuario_e_tecnico(request.user):
+        chamados = chamados.filter(autor=request.user)
+
     if busca:
         chamados = chamados.filter(
             Q(titulo__icontains=busca) 
@@ -41,12 +52,18 @@ def listar_chamados(request):
     return render(
         request,
         'chamados/listar_chamados.html',
-        {'chamados': chamados, 'busca': busca}
+        {
+        'chamados': chamados, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user),
+        },
     )
 
 
 @login_required
 def atualizar_status(request, chamado_id):
+    if not usuario_e_tecnico(request.user):
+        raise PermissionDenied
+
+    
     chamado = get_object_or_404(Chamado, pk=chamado_id)
 
     if request.method == 'POST':
@@ -67,17 +84,28 @@ def atualizar_status(request, chamado_id):
 
 @login_required
 def detalhe_chamado(request, chamado_id):
-    chamado = get_object_or_404(Chamado, pk=chamado_id)
+    chamados = Chamado.objects.all()
+
+    if not usuario_e_tecnico(request.user):
+        chamados = chamados.filter(autor=request.user)
+
+    chamado = get_object_or_404(chamados, pk=chamado_id)
 
     return render(
         request,
         'chamados/detalhe_chamado.html',
-        {'chamado': chamado},
+        {
+            'chamado': chamado,
+            'e_tecnico': usuario_e_tecnico(request.user),
+        },
     )
 
 
 @login_required
 def registrar_solucao(request, chamado_id):
+    if not usuario_e_tecnico(request.user):
+        raise PermissionDenied
+
     chamado = get_object_or_404(Chamado, pk=chamado_id)
 
     if request.method == 'POST':
@@ -92,5 +120,7 @@ def registrar_solucao(request, chamado_id):
     return render(
         request,
         'chamados/registar_solucao.html',
-        {'form': form, 'chamado': chamado}
+        {
+            'form': form, 'chamado': chamado, 'e_tecnico': usuario_e_tecnico(request.user),
+        },
     )

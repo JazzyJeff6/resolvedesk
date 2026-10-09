@@ -13,6 +13,13 @@ O projeto permite registrar problemas, consultar chamados e acompanhar o andamen
 - Atualização do status: Aberto, Em andamento e Resolvido.
 - Registro e edição da solução aplicada.
 - Pesquisa por texto no título, na descrição e na solução.
+- Login e logout de usuários.
+- Exigência de autenticação para acessar os chamados.
+- Associação automática de novos chamados ao usuário que os abriu.
+- Clientes acessam somente os próprios chamados.
+- Técnicos e administradores consultam todos os chamados e podem
+  atualizar status e registrar soluções.
+- Verificação de permissões no backend, inclusive no acesso direto às URLs.
 
 ## Tecnologias
 
@@ -53,7 +60,28 @@ python -m pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 5. Iniciar o servidor de desenvolvimento
+### Criar uma conta administradora
+
+```bat
+python manage.py createsuperuser
+```
+
+Depois de iniciar o servidor, entre com essa conta em:
+
+http://127.0.0.1:8000/admin/
+
+No painel administrativo, é possível criar usuários e grupos:
+
+- **Cliente:** usuário ativo, sem privilégios administrativos e fora
+  do grupo `Tecnicos`.
+- **Técnico:** usuário ativo pertencente ao grupo `Tecnicos`.
+  Não precisa ser staff ou superusuário.
+- **Administrador:** conta criada com `createsuperuser`.
+
+O nome do grupo deve ser exatamente `Tecnicos`, sem acento.
+
+
+### 6. Iniciar o servidor de desenvolvimento
 
 ```bat
 python manage.py runserver
@@ -69,7 +97,6 @@ O servidor utilizado nesta etapa é destinado ao desenvolvimento local.
 ## Próximas etapas
 
 - Melhorias na interface com CSS.
-- Autenticação e permissões de acesso.
 - Biblioteca dedicada de soluções.
 - Sugestões de soluções por semelhança entre chamados.
 - Testes automatizados das regras principais.

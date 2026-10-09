@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ChamadoForm, ChamadoStatusForm, ChamadoSolucaoForm
 from .models import Chamado
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 from django.shortcuts import render, redirect
 from .forms import ChamadoForm
 
+
+@login_required
 def novo_chamado(request):
     if request.method == 'POST':
         form = ChamadoForm(request.POST)
@@ -19,6 +22,8 @@ def novo_chamado(request):
     
     return render(request, 'chamados/novo_chamado.html', {'form':form})
 
+
+@login_required
 def listar_chamados(request):
     busca = request.GET.get('busca', '').strip()
 
@@ -37,6 +42,8 @@ def listar_chamados(request):
         {'chamados': chamados, 'busca': busca}
     )
 
+
+@login_required
 def atualizar_status(request, chamado_id):
     chamado = get_object_or_404(Chamado, pk=chamado_id)
 
@@ -55,6 +62,8 @@ def atualizar_status(request, chamado_id):
         {'form': form, 'chamado': chamado}
     )
 
+
+@login_required
 def detalhe_chamado(request, chamado_id):
     chamado = get_object_or_404(Chamado, pk=chamado_id)
 
@@ -64,6 +73,8 @@ def detalhe_chamado(request, chamado_id):
         {'chamado': chamado},
     )
 
+
+@login_required
 def registrar_solucao(request, chamado_id):
     chamado = get_object_or_404(Chamado, pk=chamado_id)
 

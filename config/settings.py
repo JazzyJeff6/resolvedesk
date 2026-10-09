@@ -127,3 +127,6 @@ MAILERS = {
     },
 }
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'listar_chamados'
+LOGOUT_REDIRECT_URL = 'login'

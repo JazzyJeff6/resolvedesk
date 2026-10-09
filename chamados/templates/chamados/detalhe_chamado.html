@@ -17,6 +17,16 @@
         <h2>{{ chamado.titulo }}</h2>
 
         <p>
+            <strong>Aberto por:</strong>
+
+            {% if chamado.autor %}
+                {{ chamado.autor.username }}
+            {% else %}
+                Não informado
+            {% endif %}
+        </p>
+
+        <p>
             <strong>Status:</strong>
             {{ chamado.get_status_display }}
         </p>

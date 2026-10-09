@@ -15,7 +15,9 @@ def novo_chamado(request):
         form = ChamadoForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            chamado = form.save(commit=False)
+            chamado.autor = request.user
+            chamado.save()
             return redirect('listar_chamados')
     else:
         form = ChamadoForm()

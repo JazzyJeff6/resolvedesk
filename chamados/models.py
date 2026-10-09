@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
@@ -26,3 +27,11 @@ class Chamado(models.Model):
 
     def __str__(self):
         return self.titulo
+
+    autor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name='chamados',
+        null=True,
+        blank=True,
+    )

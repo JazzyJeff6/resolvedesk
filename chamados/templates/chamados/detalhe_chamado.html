@@ -56,11 +56,13 @@
             <p>Nenhuma solução registrada ainda.</p>
         {% endif %}
 
+        {% if e_tecnico %}
         <div class="acoes">
             <a class="botao" href="{% url 'registrar_solucao' chamado.id %}">
                 Registrar ou editar solução
             </a>
         </div>
+        {% endif %}
     </section>
 
     <a href="{% url 'listar_chamados' %}">Voltar para a lista</a>

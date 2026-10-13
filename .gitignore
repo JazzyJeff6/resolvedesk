@@ -21,3 +21,5 @@ db.sqlite3-journal
 /Lib/
 /Scripts/
 /pyvenv.cfg
+
+/staticfiles/

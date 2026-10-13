@@ -177,3 +177,56 @@ class AcessoChamadosTests(TestCase):
             'Driver reinstalado e impressao testada.',
         )
         self.assertEqual(chamado.autor_id, cliente.id)
+
+
+    def test_novo_chamado_recebe_usuario_logado_como_autor(self):
+        User = get_user_model()
+        cliente = User.objects.create_user(username='cliente')
+
+        self.client.force_login(cliente)
+
+        resposta = self.client.post(
+            reverse('novo_chamado'),
+            {
+                'titulo': 'Internet caindo',
+                'descricao': 'A conexao cai durante o dia.',
+            },
+        )
+
+        self.assertRedirects(resposta, reverse('listar_chamados'))
+
+        self.assertEqual(Chamado.objects.count(), 1)
+
+        chamado = Chamado.objects.get()
+        self.assertEqual(chamado.autor_id, cliente.id)
+        self.assertEqual(chamado.titulo, 'Internet caindo')
+        self.assertEqual(chamado.status, 'aberto')
+
+
+    def test_cliente_lista_apenas_os_proprios_chamados(self):
+        User = get_user_model()
+
+        cliente = User.objects.create_user(username='cliente')
+        outro = User.objects.create_user(username='outro')
+
+        proprio = Chamado.objects.create(
+            titulo='Chamado do cliente',
+            descricao='Problema do cliente logado.',
+            autor=cliente,
+        )
+
+        Chamado.objects.create(
+            titulo='Chamado de outro usuario',
+            descricao='Problema de outra pessoa.',
+            autor=outro,
+        )
+
+        self.client.force_login(cliente)
+
+        resposta = self.client.get(reverse('listar_chamados'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertQuerySetEqual(
+            resposta.context['chamados'],
+            [proprio],
+        )

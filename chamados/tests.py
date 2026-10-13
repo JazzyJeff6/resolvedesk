@@ -114,3 +114,66 @@ class AcessoChamadosTests(TestCase):
 
         chamado.refresh_from_db()
         self.assertEqual(chamado.status, 'em_andamento')
+
+
+    def test_cliente_nao_altera_solucao_do_proprio_chamado(self):
+        User = get_user_model()
+        cliente = User.objects.create_user(username='cliente')
+
+        chamado = Chamado.objects.create(
+            titulo='Impressora nao imprime',
+            descricao='A impressora nao responde.',
+            autor=cliente,
+            solucao='Solucao registrada pelo tecnico.',
+        )
+
+        self.client.force_login(cliente)
+
+        resposta = self.client.post(
+            reverse('registrar_solucao', args=[chamado.id]),
+            {'solucao': 'Alteracao feita pelo cliente.'},
+        )
+
+        self.assertEqual(resposta.status_code, 403)
+
+        chamado.refresh_from_db()
+        self.assertEqual(
+            chamado.solucao,
+            'Solucao registrada pelo tecnico.',
+        )
+
+
+    def test_tecnico_altera_solucao_de_chamado(self):
+        User = get_user_model()
+
+        cliente = User.objects.create_user(username='cliente')
+        tecnico = User.objects.create_user(username='tecnico')
+
+        grupo = Group.objects.create(name='Tecnicos')
+        tecnico.groups.add(grupo)
+
+        chamado = Chamado.objects.create(
+            titulo='Impressora nao imprime',
+            descricao='A impressora nao responde.',
+            autor=cliente,
+            solucao='',
+        )
+
+        self.client.force_login(tecnico)
+
+        resposta = self.client.post(
+            reverse('registrar_solucao', args=[chamado.id]),
+            {'solucao': 'Driver reinstalado e impressao testada.'},
+        )
+
+        self.assertRedirects(
+            resposta,
+            reverse('detalhe_chamado', args=[chamado.id]),
+        )
+
+        chamado.refresh_from_db()
+        self.assertEqual(
+            chamado.solucao,
+            'Driver reinstalado e impressao testada.',
+        )
+        self.assertEqual(chamado.autor_id, cliente.id)

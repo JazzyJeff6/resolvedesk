@@ -14,6 +14,9 @@ jobs:
   testes:
     runs-on: ubuntu-latest
 
+    env:
+      DJANGO_SECRET_KEY: chave-publica-apenas-para-testes-automatizados
+
     steps:
       - name: Baixar o codigo
         uses: actions/checkout@v6

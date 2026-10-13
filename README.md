@@ -1,5 +1,7 @@
 # ResolveDesk
 
+[![Testes do ResolveDesk](https://github.com/JazzyJeff6/resolvedesk/actions/workflows/testes.yml/badge.svg)](https://github.com/JazzyJeff6/resolvedesk/actions/workflows/testes.yml)
+
 Sistema web de chamados de suporte técnico desenvolvido com Python e Django.
 
 O projeto permite registrar problemas, consultar chamados e acompanhar o andamento do atendimento. Está sendo desenvolvido como projeto de portfólio, com evolução gradual das funcionalidades.

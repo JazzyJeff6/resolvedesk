@@ -109,6 +109,8 @@ Os testes verificam:
 - Bloqueio da alteração de status e solução por clientes.
 - Permissão para técnicos alterarem status e solução.
 - Preservação do autor quando o técnico registra uma solução.
+- Associação do novo chamado ao usuário logado, com status inicial Aberto.
+- Listagem restrita aos chamados do próprio cliente.
 
 O Django utiliza um banco temporário durante os testes, separado
 do banco de desenvolvimento.

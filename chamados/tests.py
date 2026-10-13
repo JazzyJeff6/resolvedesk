@@ -230,3 +230,44 @@ class AcessoChamadosTests(TestCase):
             resposta.context['chamados'],
             [proprio],
         )
+
+
+    def test_busca_por_solucao_respeita_autor(self):
+        User = get_user_model()
+
+        cliente = User.objects.create_user(username='cliente')
+        outro = User.objects.create_user(username='outro')
+
+        proprio = Chamado.objects.create(
+            titulo='Impressora nao imprime',
+            descricao='A impressora nao responde.',
+            solucao='Driver reinstalado.',
+            autor=cliente,
+        )
+
+        Chamado.objects.create(
+            titulo='Problema de outro cliente',
+            descricao='Outro equipamento com falha.',
+            solucao='Driver atualizado.',
+            autor=outro,
+        )
+
+        Chamado.objects.create(
+            titulo='Internet caindo',
+            descricao='A conexao esta instavel.',
+            solucao='Cabo substituido.',
+            autor=cliente,
+        )
+
+        self.client.force_login(cliente)
+
+        resposta = self.client.get(
+            reverse('listar_chamados'),
+            {'busca': 'driver'},
+        )
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertQuerySetEqual(
+            resposta.context['chamados'],
+            [proprio],
+        )

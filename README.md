@@ -6,6 +6,15 @@ Sistema web de chamados de suporte técnico desenvolvido com Python e Django.
 
 O projeto permite registrar problemas, consultar chamados e acompanhar o andamento do atendimento. Está sendo desenvolvido como projeto de portfólio, com evolução gradual das funcionalidades.
 
+## Demonstração online
+
+Acesse: [ResolveDesk](https://resolvedesk-ak2f.onrender.com/)
+
+A demonstração utiliza dados fictícios e exige login.
+
+A hospedagem usa o plano gratuito do Render. Após um período sem
+acessos, a primeira abertura pode levar cerca de um minuto.
+
 ## Funcionalidades disponíveis
 
 - Abertura de chamados com título e descrição.

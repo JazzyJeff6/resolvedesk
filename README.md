@@ -71,13 +71,34 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-### 4. Preparar o banco de dados
+### 4.Configurar o ambiente de desenvolvimento
+
+No Prompt de Comando (CMD), gere uma chave local:
+
+```bat
+python -c "import secrets; print(secrets.token_urlsafe(50))"
+```
+
+Substitua `SUA_CHAVE` pelo resultado e execute:
+
+```bat
+set DJANGO_SECRET_KEY=SUA_CHAVE
+set DJANGO_DEBUG=True
+```
+
+Essas variáveis valem apenas para o terminal atual. Configure-as
+novamente ao abrir outro terminal, antes de executar comandos do Django.
+
+Não publique a chave no repositório. A produção deve utilizar
+uma chave própria e manter `DJANGO_DEBUG=False`.
+
+### 5. Preparar o banco de dados
 
 ```bat
 python manage.py migrate
 ```
 
-### Criar uma conta administradora
+### 6.Criar uma conta administradora
 
 ```bat
 python manage.py createsuperuser
@@ -98,7 +119,7 @@ No painel administrativo, é possível criar usuários e grupos:
 O nome do grupo deve ser exatamente `Tecnicos`, sem acento.
 
 
-### 6. Iniciar o servidor de desenvolvimento
+### 7. Iniciar o servidor de desenvolvimento
 
 ```bat
 python manage.py runserver

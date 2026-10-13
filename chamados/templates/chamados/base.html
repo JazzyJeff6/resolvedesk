@@ -17,7 +17,9 @@
         <nav aria-label="Navegação principal">
             {% if user.is_authenticated %}
                 <a href="{% url 'listar_chamados' %}">Chamados</a>
-                <a href="{% url 'novo_chamado' %}">Novo Chamado</a>
+                {% if perms.chamados.add_chamado %}
+                    <a href="{% url 'novo_chamado' %}">Novo Chamado</a>
+                {% endif %}
 
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}

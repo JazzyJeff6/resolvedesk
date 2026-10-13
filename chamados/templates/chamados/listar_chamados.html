@@ -62,8 +62,10 @@
             <p>Nenhum chamado encontrado para "{{ busca }}".</p>
         {% else %}
             <p>Nenhum chamado cadastrado ainda.</p>
-            <a class="botao" href="{% url 'novo_chamado' %}">
-                Abrir primeiro chamado
+            {% if not e_demonstracao %}
+                <a class="botao" href="{% url 'novo_chamado' %}">
+                    Abrir primeiro chamado
+            {% endif %}
             </a>
         {% endif %}
         </div>

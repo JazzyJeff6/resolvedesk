@@ -9,6 +9,9 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from .forms import ChamadoForm
 
+def usuario_e_demonstracao(user):
+    return user.groups.filter(name='Demonstracao').exists()
+
 def usuario_e_tecnico(user):
     return(
         user.is_superuser
@@ -19,6 +22,13 @@ def usuario_e_tecnico(user):
 
 @login_required
 def novo_chamado(request):
+    if (
+        usuario_e_demonstracao(request.user)
+        or not request.user.has_perm('chamados.add_chamado')
+    ):
+        raise PermissionDenied
+
+    
     if request.method == 'POST':
         form = ChamadoForm(request.POST)
 

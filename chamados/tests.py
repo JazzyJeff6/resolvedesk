@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from .models import Chamado
+from django.contrib.auth.models import Permission
 
 class AcessoChamadosTests(TestCase):
     def test_visitante_e_redirecionado_para_login(self):
@@ -183,6 +184,12 @@ class AcessoChamadosTests(TestCase):
         User = get_user_model()
         cliente = User.objects.create_user(username='cliente')
 
+        permissao = Permission.objects.get(
+            content_type__app_label='chamados',
+            codename='add_chamado',
+        )
+        cliente.user_permissions.add(permissao)  
+
         self.client.force_login(cliente)
 
         resposta = self.client.post(
@@ -192,7 +199,6 @@ class AcessoChamadosTests(TestCase):
                 'descricao': 'A conexao cai durante o dia.',
             },
         )
-
         self.assertRedirects(resposta, reverse('listar_chamados'))
 
         self.assertEqual(Chamado.objects.count(), 1)
@@ -271,3 +277,34 @@ class AcessoChamadosTests(TestCase):
             resposta.context['chamados'],
             [proprio],
         )
+
+    def test_demonstracao_nao_cadastra_mesmo_com_permissao(self):
+        User = get_user_model()
+        demo = User.objects.create_user(username='cliente_demo')
+
+        grupo = Group.objects.create(name='Demonstracao')
+        demo.groups.add(grupo)
+
+        permissao = Permission.objects.get(
+            content_type__app_label='chamados',
+            codename='add_chamado',
+        )
+        demo.user_permissions.add(permissao)
+
+        self.client.force_login(demo)
+
+        url = reverse('novo_chamado')
+
+        resposta_get = self.client.get(url)
+        self.assertEqual(resposta_get.status_code, 403)
+
+        resposta_post = self.client.post(
+            url,
+            {
+                'titulo': 'Tentativa de cadastro',
+                'descricao': 'Enviado pela conta de demonstracao.',
+            },
+        )
+
+        self.assertEqual(resposta_post.status_code, 403)
+        self.assertEqual(Chamado.objects.count(), 0)

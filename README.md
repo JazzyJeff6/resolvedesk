@@ -15,6 +15,17 @@ A demonstração utiliza dados fictícios e exige login.
 A hospedagem usa o plano gratuito do Render. Após um período sem
 acessos, a primeira abertura pode levar cerca de um minuto.
 
+### Acesso de demonstração
+
+- **Usuário:** `cliente_demo`
+- **Senha:** `teste_123`
+
+Essa conta permite somente consultar seus chamados fictícios,
+status e soluções. Cadastro e edição estão bloqueados.
+
+As contas técnicas e administrativas não são disponibilizadas
+ao público.
+
 ## Funcionalidades disponíveis
 
 - Abertura de chamados com título e descrição.

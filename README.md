@@ -94,12 +94,31 @@ http://127.0.0.1:8000/chamados/
 O banco de dados local é criado pelas migrações e começa sem chamados.
 O servidor utilizado nesta etapa é destinado ao desenvolvimento local.
 
+## Testes automatizados
+
+Com o ambiente virtual ativo e as dependências instaladas, execute:
+
+```bat
+python manage.py test chamados
+```
+
+Os testes verificam:
+
+- Redirecionamento de visitantes sem login.
+- Bloqueio do acesso de um cliente ao chamado de outro usuário.
+- Bloqueio da alteração de status e solução por clientes.
+- Permissão para técnicos alterarem status e solução.
+- Preservação do autor quando o técnico registra uma solução.
+
+O Django utiliza um banco temporário durante os testes, separado
+do banco de desenvolvimento.
+
 ## Próximas etapas
 
 - Melhorias na interface com CSS.
 - Biblioteca dedicada de soluções.
 - Sugestões de soluções por semelhança entre chamados.
-- Testes automatizados das regras principais.
+- Ampliar os testes de cadastro, listagem e pesquisa de chamados.
 
 ## Autor
 

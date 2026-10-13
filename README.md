@@ -29,6 +29,21 @@ O projeto permite registrar problemas, consultar chamados e acompanhar o andamen
 - HTML com templates do Django
 - Git e GitHub
 
+## Telas do sistema
+
+### Lista de chamados
+
+Pesquisa e consulta dos chamados disponíveis para o usuário.
+
+![Lista de chamados do ResolveDesk](docs/images/lista-chamados.png)
+
+### Detalhes do chamado
+
+Informações do atendimento, status e solução aplicada.
+As opções de edição são exibidas para técnicos e administradores.
+
+![Detalhes de um chamado no ResolveDesk](docs/images/detalhes-chamado.png)
+
 ## Como executar no Windows
 
 Os comandos abaixo devem ser executados no Prompt de Comando (CMD).

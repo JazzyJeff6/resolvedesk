@@ -35,6 +35,22 @@
     <form method="get" action="{% url 'listar_chamados' %}">
         <label for="busca">Pesquisar chamados e soluções:</label>
 
+        <p>
+            <label for="status">Filtrar por status</label>
+
+            <select name="status" id="status">
+                <option value="">Todos os status</option>
+
+                {% for valor, nome in status_opcoes %}
+                    <option 
+                    value="{{ valor }}"
+                    {% if status_selecionado == valor %}selected{% endif %}>
+                    {{ nome }}
+                </option>
+                {% endfor %}
+            </select>
+        </p>
+
         <input
             type="search"
             id="busca"
@@ -45,7 +61,7 @@
         
         <div class="acoes">
         <button type="submit">Pesquisar</button>
-        <a href="{% url 'listar_chamados' %}">Limpar busca</a>
+        <a href="{% url 'listar_chamados' %}">Limpar filtros</a>
         </div>
     </form>
     </div>
@@ -75,8 +91,8 @@
         </article>
     {% empty %}
         <div class="card">
-        {% if busca %}
-            <p>Nenhum chamado encontrado para "{{ busca }}".</p>
+        {% if busca or status_selecionado %}
+            <p>Nenhum chamado encontrado com os filtros selecionados!.</p>
         {% else %}
             <p>Nenhum chamado cadastrado ainda.</p>
             {% if not e_demonstracao %}

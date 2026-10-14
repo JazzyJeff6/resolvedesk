@@ -47,6 +47,12 @@ def novo_chamado(request):
 def listar_chamados(request):
     busca = request.GET.get('busca', '').strip()
 
+    status = request.GET.get('status', '').strip()
+
+    status_validos = dict(Chamado.STATUS_CHOICES)
+    if status not in status_validos:
+        status=''
+
     chamados = Chamado.objects.order_by('-criado_em')
 
     if not usuario_e_tecnico(request.user):
@@ -57,6 +63,9 @@ def listar_chamados(request):
         'em_andamento': chamados.filter(status='em_andamento').count(),
         'resolvidos': chamados.filter(status='resolvido').count(),
     }
+
+    if status:
+        chamados = chamados.filter(status=status)
 
     if busca:
         chamados = chamados.filter(
@@ -69,7 +78,7 @@ def listar_chamados(request):
         request,
         'chamados/listar_chamados.html',
         {
-        'chamados': chamados, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user), 'resumo': resumo,
+        'chamados': chamados, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user), 'resumo': resumo, 'status_selecionado': status, 'status_opcoes': Chamado.STATUS_CHOICES,
         },
     )
 

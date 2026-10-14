@@ -351,3 +351,57 @@ class AcessoChamadosTests(TestCase):
         self.assertEqual(resposta_busca.status_code, 200)
         self.assertEqual(resposta_busca.context['resumo'], esperado)
         self.assertEqual(resposta_busca.context['chamados'].count(), 0)
+
+    def test_filtro_status_combina_busca_e_respeita_autor(self):
+        User = get_user_model()
+        cliente = User.objects.create_user(username='cliente')
+        outro = User.objects.create_user(username='outro')
+
+        esperado = Chamado.objects.create(
+            titulo='Impressora do financeiro',
+            descricao='Falha na impressao.',
+            autor=cliente,
+            status='resolvido',
+        )
+
+        Chamado.objects.create(
+            titulo='Impressora da recepcao',
+            descricao='Falha na impressao.',
+            autor=cliente,
+            status='aberto',
+        )
+
+        Chamado.objects.create(
+            titulo='Internet instavel',
+            descricao='Falha na conexao.',
+            autor=cliente,
+            status='resolvido',
+        )
+
+        Chamado.objects.create(
+            titulo='Impressora de outro cliente',
+            descricao='Falha na impressao.',
+            autor=outro,
+            status='resolvido',
+        )
+
+        self.client.force_login(cliente)
+
+        resposta = self.client.get(
+            reverse('listar_chamados'),
+            {'busca': 'impressora', 'status': 'resolvido'},
+        )
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertQuerySetEqual(
+            resposta.context['chamados'],
+            [esperado],
+        )
+        self.assertEqual(
+            resposta.context['status_selecionado'],
+            'resolvido',
+        )
+        self.assertEqual(
+            resposta.context['resumo'],
+            {'abertos': 1, 'em_andamento': 0, 'resolvidos': 2},
+        )

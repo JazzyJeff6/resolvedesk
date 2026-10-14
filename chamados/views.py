@@ -52,6 +52,12 @@ def listar_chamados(request):
     if not usuario_e_tecnico(request.user):
         chamados = chamados.filter(autor=request.user)
 
+    resumo = {
+        'abertos': chamados.filter(status='aberto').count(),
+        'em_andamento': chamados.filter(status='em_andamento').count(),
+        'resolvidos': chamados.filter(status='resolvido').count(),
+    }
+
     if busca:
         chamados = chamados.filter(
             Q(titulo__icontains=busca) 
@@ -63,7 +69,7 @@ def listar_chamados(request):
         request,
         'chamados/listar_chamados.html',
         {
-        'chamados': chamados, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user),
+        'chamados': chamados, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user), 'resumo': resumo,
         },
     )
 

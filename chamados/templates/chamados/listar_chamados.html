@@ -13,6 +13,23 @@
     {% block content %}
     <h1>Chamados</h1>
     <p>Consulte os problemas registrados e as soluções aplicadas.</p>
+    
+    <section class="resumo" aria-label="Resumo dos chamados">
+        <div class="card indicador">
+            <h2>Abertos</h2>
+            <p class="indicador-numero">{{ resumo.abertos }}</p>
+        </div>
+
+        <div class="card indicador">
+            <h2>Em andamento</h2>
+            <p class="indicador-numero">{{ resumo.em_andamento }}</p>
+        </div>
+
+        <div class="card indicador">
+            <h2>Resolvidos</h2>
+            <p class="indicador-numero">{{ resumo.resolvidos }}</p>
+        </div>
+    </section>
 
     <div class="card">
     <form method="get" action="{% url 'listar_chamados' %}">

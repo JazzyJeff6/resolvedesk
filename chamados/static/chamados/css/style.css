@@ -111,3 +111,33 @@ button:focus-visible, a:focus-visible{
 .errorlist {
     color: #b91c1c;
 }
+
+.resumo {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.indicador {
+    margin-bottom: 0;
+}
+
+.indicador h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.indicador-numero {
+    margin: 8px 0 0;
+    font-size: 36px;
+    font-weight: bold;
+    color: #1d4ed8;
+}
+
+
+@media (max-width: 640px) {
+    .resumo { 
+        grid-template-columns: 1fr;
+    }
+}

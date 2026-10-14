@@ -308,3 +308,46 @@ class AcessoChamadosTests(TestCase):
 
         self.assertEqual(resposta_post.status_code, 403)
         self.assertEqual(Chamado.objects.count(), 0)
+
+    def test_resumo_respeita_autor_e_nao_muda_com_busca(self):
+        User = get_user_model()
+
+        cliente = User.objects.create_user(username='cliente')
+        outro = User.objects.create_user(username='outro')
+
+        for status in ['aberto', 'em_andamento', 'resolvido']:
+            Chamado.objects.create(
+                titulo=f'Chamado {status}',
+                descricao='Problema usado no teste.',
+                autor=cliente,
+                status=status,
+            )
+
+        Chamado.objects.create(
+            titulo='Chamado de outra pessoa',
+            descricao='Nao deve entrar nos contadores do cliente.',
+            autor=outro,
+            status='resolvido',
+        )
+
+        self.client.force_login(cliente)
+
+        esperado = {
+            'abertos': 1,
+            'em_andamento': 1,
+            'resolvidos': 1,
+        }
+
+        resposta = self.client.get(reverse('listar_chamados'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.context['resumo'], esperado)
+
+        resposta_busca = self.client.get(
+            reverse('listar_chamados'),
+            {'busca': 'sem correspondencia'},
+        )
+
+        self.assertEqual(resposta_busca.status_code, 200)
+        self.assertEqual(resposta_busca.context['resumo'], esperado)
+        self.assertEqual(resposta_busca.context['chamados'].count(), 0)

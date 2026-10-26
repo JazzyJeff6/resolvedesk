@@ -6,14 +6,14 @@
     <title>Chamados | ResolveDesk</title>
 </head>
 <body>
-    {% extends 'chamados/base.html' %}
+{% extends 'chamados/base.html' %}
 
-    {% block title %}Chamados | ResolveDesk{% endblock %}
+{% block title %}Chamados | ResolveDesk{% endblock %}
 
-    {% block content %}
+{% block content %}
     <h1>Chamados</h1>
     <p>Consulte os problemas registrados e as soluções aplicadas.</p>
-    
+
     <section class="resumo" aria-label="Resumo dos chamados">
         <div class="card indicador">
             <h2>Abertos</h2>
@@ -32,38 +32,39 @@
     </section>
 
     <div class="card">
-    <form method="get" action="{% url 'listar_chamados' %}">
-        <label for="busca">Pesquisar chamados e soluções:</label>
+        <form method="get" action="{% url 'listar_chamados' %}">
+            <label for="busca">Pesquisar chamados e soluções</label>
 
-        <p>
-            <label for="status">Filtrar por status</label>
+            <input
+                type="search"
+                id="busca"
+                name="busca"
+                value="{{ busca }}"
+                placeholder="Ex.: impressora ou driver"
+            >
 
-            <select name="status" id="status">
-                <option value="">Todos os status</option>
+            <p>
+                <label for="status">Filtrar por status</label>
 
-                {% for valor, nome in status_opcoes %}
-                    <option 
-                    value="{{ valor }}"
-                    {% if status_selecionado == valor %}selected{% endif %}>
-                    {{ nome }}
-                </option>
-                {% endfor %}
-            </select>
-        </p>
+                <select name="status" id="status">
+                    <option value="">Todos os status</option>
 
-        <input
-            type="search"
-            id="busca"
-            name="busca"
-            value=" {{ busca }}"
-            placeholder="Ex: impressora ou driver"
-        >
-        
-        <div class="acoes">
-        <button type="submit">Pesquisar</button>
-        <a href="{% url 'listar_chamados' %}">Limpar filtros</a>
-        </div>
-    </form>
+                    {% for valor, nome in status_opcoes %}
+                        <option
+                            value="{{ valor }}"
+                            {% if status_selecionado == valor %}selected{% endif %}
+                        >
+                            {{ nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </p>
+
+            <div class="acoes">
+                <button type="submit">Pesquisar</button>
+                <a href="{% url 'listar_chamados' %}">Limpar filtros</a>
+            </div>
+        </form>
     </div>
 
     {% for chamado in chamados %}
@@ -75,34 +76,62 @@
             </h2>
 
             <p>{{ chamado.descricao }}</p>
-            <p><strong>Status:</strong> {{ chamado.get_status_display }}</p>     
+            <p><strong>Status:</strong> {{ chamado.get_status_display }}</p>
             <p>Criado em: {{ chamado.criado_em|date:"d/m/Y H:i" }}</p>
 
             <div class="acoes">
                 <a class="botao" href="{% url 'detalhe_chamado' chamado.id %}">
                     Ver detalhes
                 </a>
-            {% if e_tecnicos %}    
-                <a href="{% url 'atualizar_status' chamado.id %}">
-                    Alterar status
-                </a>
-            {% endif %}
+
+                {% if e_tecnico %}
+                    <a href="{% url 'atualizar_status' chamado.id %}">
+                        Alterar status
+                    </a>
+                {% endif %}
             </div>
         </article>
     {% empty %}
         <div class="card">
-        {% if busca or status_selecionado %}
-            <p>Nenhum chamado encontrado com os filtros selecionados!.</p>
-        {% else %}
-            <p>Nenhum chamado cadastrado ainda.</p>
-            {% if not e_demonstracao %}
-                <a class="botao" href="{% url 'novo_chamado' %}">
-                    Abrir primeiro chamado
+            {% if busca or status_selecionado %}
+                <p>Nenhum chamado encontrado com os filtros selecionados.</p>
+            {% else %}
+                <p>Nenhum chamado cadastrado ainda.</p>
+
+                {% if not e_demonstracao and perms.chamados.add_chamado %}
+                    <a class="botao" href="{% url 'novo_chamado' %}">
+                        Abrir primeiro chamado
+                    </a>
+                {% endif %}
             {% endif %}
-            </a>
-        {% endif %}
         </div>
     {% endfor %}
-    {% endblock %}
+
+    {% if pagina.has_other_pages %}
+        <nav class="acoes" aria-label="Paginação dos chamados">
+            {% if pagina.has_previous %}
+                <a
+                    class="botao"
+                    href="?page={{ pagina.previous_page_number }}&amp;busca={{ busca|urlencode }}&amp;status={{ status_selecionado|urlencode }}"
+                >
+                    Anterior
+                </a>
+            {% endif %}
+
+            <span>
+                Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}
+            </span>
+
+            {% if pagina.has_next %}
+                <a
+                    class="botao"
+                    href="?page={{ pagina.next_page_number }}&amp;busca={{ busca|urlencode }}&amp;status={{ status_selecionado|urlencode }}"
+                >
+                    Próxima
+                </a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endblock %}
 </body>
 </html>

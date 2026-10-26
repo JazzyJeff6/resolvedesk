@@ -4,6 +4,7 @@ from .models import Chamado
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 # Create your views here.
 
 from django.shortcuts import render, redirect
@@ -49,6 +50,8 @@ def listar_chamados(request):
 
     status = request.GET.get('status', '').strip()
 
+    chamados = Chamado.objects.order_by('-criado_em', '-id')
+
     status_validos = dict(Chamado.STATUS_CHOICES)
     if status not in status_validos:
         status=''
@@ -74,11 +77,14 @@ def listar_chamados(request):
             | Q(solucao__icontains=busca)
         )
 
+    paginador = Paginator(chamados, 10)
+    pagina = paginador.get_page(request.GET.get('page'))
+
     return render(
         request,
         'chamados/listar_chamados.html',
         {
-        'chamados': chamados, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user), 'resumo': resumo, 'status_selecionado': status, 'status_opcoes': Chamado.STATUS_CHOICES,
+        'chamados': pagina.object_list,'pagina': pagina, 'busca': busca, 'e_tecnico': usuario_e_tecnico(request.user), 'resumo': resumo, 'status_selecionado': status, 'status_opcoes': Chamado.STATUS_CHOICES,
         },
     )
 

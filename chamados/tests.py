@@ -405,3 +405,43 @@ class AcessoChamadosTests(TestCase):
             resposta.context['resumo'],
             {'abertos': 1, 'em_andamento': 0, 'resolvidos': 2},
         )
+
+    def test_paginacao_respeita_autor(self):
+        User = get_user_model()
+
+        cliente = User.objects.create_user(username='cliente')
+        outro = User.objects.create_user(username='outro')
+
+        registros = []
+
+        for numero in range(12):
+            chamado = Chamado.objects.create(
+                titulo=f'Chamado {numero}',
+                descricao='Teste de paginacao.',
+                autor=cliente,
+            )
+            registros.append(chamado)
+
+        Chamado.objects.create(
+            titulo='Chamado de outro usuario',
+            descricao='Nao deve aparecer.',
+            autor=outro,
+        )
+
+        self.client.force_login(cliente)
+
+        resposta = self.client.get(
+            reverse('listar_chamados'),
+            {'page': 2},
+        )
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.context['pagina'].number, 2)
+        self.assertEqual(
+            resposta.context['pagina'].paginator.count,
+            12,
+        )
+        self.assertQuerySetEqual(
+            resposta.context['chamados'],
+            [registros[1], registros[0]],
+        )

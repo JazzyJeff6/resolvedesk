@@ -28,6 +28,9 @@ ao público.
 
 ## Funcionalidades disponíveis
 
+- Resumo com a quantidade de chamados abertos, em andamento e resolvidos.
+- Filtro por status combinado com pesquisa por texto.
+- Paginação com até treze chamados por página, preservando os filtros.
 - Abertura de chamados com título e descrição.
 - Listagem dos chamados, do mais recente para o mais antigo.
 - Página de detalhes de cada chamado.
@@ -40,7 +43,7 @@ ao público.
 - Associação automática de novos chamados ao usuário que os abriu.
 - Clientes acessam somente os próprios chamados.
 - Técnicos e administradores consultam todos os chamados e podem
-  atualizar status e registrar soluções.
+- atualizar status e registrar soluções.
 - Verificação de permissões no backend, inclusive no acesso direto às URLs.
 
 ## Tecnologias
@@ -162,6 +165,9 @@ python manage.py test chamados
 
 Os testes verificam:
 
+- Contadores por status respeitando o autor e mantendo os totais durante a busca.
+- Combinação de busca e filtro por status com restrição de acesso.
+- Paginação respeitando os chamados permitidos para o usuário.
 - Redirecionamento de visitantes sem login.
 - Bloqueio do acesso de um cliente ao chamado de outro usuário.
 - Bloqueio da alteração de status e solução por clientes.
@@ -179,7 +185,6 @@ do banco de desenvolvimento.
 - Melhorias na interface com CSS.
 - Biblioteca dedicada de soluções.
 - Sugestões de soluções por semelhança entre chamados.
-- Ampliar os testes de cadastro, listagem e pesquisa de chamados.
 
 ## Autor
 
